@@ -2,7 +2,9 @@
 
 
 Group Member:
+
 Rodrigo Gallardo
+
 German Perez
 
 Proposal:
