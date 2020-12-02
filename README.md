@@ -8,4 +8,5 @@ Rodrigo Gallardo
 German Perez
 
 Proposal:
-[]!(IMG_0008.jpg)
+
+https://user-images.githubusercontent.com/54647902/100839768-a2871f80-3429-11eb-9498-2aecbcb35269.jpg
