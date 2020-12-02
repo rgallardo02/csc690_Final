@@ -8,4 +8,4 @@ Rodrigo Gallardo
 German Perez
 
 Proposal:
-
+[]!(IMG_0008.jpg)
