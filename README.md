@@ -9,4 +9,4 @@ German Perez
 
 Proposal:
 
-https://user-images.githubusercontent.com/54647902/100839768-a2871f80-3429-11eb-9498-2aecbcb35269.jpg
+![IMG_0008](https://user-images.githubusercontent.com/54647902/100839859-ca768300-3429-11eb-8365-5a3fbe13844a.jpg)
