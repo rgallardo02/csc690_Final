@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
+  
     fileprivate let locationManager: CLLocationManager = {
       let manager = CLLocationManager()
         manager.requestWhenInUseAuthorization()
@@ -55,7 +56,6 @@ extension ViewController: CLLocationManagerDelegate {
         print(error.localizedDescription)
     }
     
-    
-    
 }
+
 
