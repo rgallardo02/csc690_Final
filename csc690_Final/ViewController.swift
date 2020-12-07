@@ -7,11 +7,18 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
+    @IBAction func returnLocation(_ sender: Any) {
+
+       // let carLocation = defaults.String(forKey: "location")
+        print("CarLocation:")
+        
+    }
   
     fileprivate let locationManager: CLLocationManager = {
       let manager = CLLocationManager()
@@ -22,10 +29,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
          setUpMapView()
+        self.locationManager.requestAlwaysAuthorization()
         
         mapView.delegate = self
         let longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTap))
         mapView.addGestureRecognizer(longTapGesture)
+        
     }
     
     @objc func longTap(sender: UIGestureRecognizer){
@@ -40,8 +49,7 @@ class ViewController: UIViewController {
     func addAnnotation(location: CLLocationCoordinate2D){
             let annotation = MKPointAnnotation()
             annotation.coordinate = location
-            annotation.title = "Some Title"
-            annotation.subtitle = "Some Subtitle"
+            annotation.title = "Save Address"
             self.mapView.addAnnotation(annotation)
     }
     
@@ -78,6 +86,7 @@ extension ViewController: CLLocationManagerDelegate {
     }
     
 }
+
 extension ViewController: MKMapViewDelegate{
 
 func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -90,7 +99,7 @@ func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnota
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         pinView!.canShowCallout = true
         pinView!.rightCalloutAccessoryView = UIButton(type: .infoDark)
-        pinView!.pinTintColor = UIColor.black
+        pinView!.pinTintColor = UIColor.blue
     }
     else {
         pinView!.annotation = annotation
@@ -100,14 +109,37 @@ func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnota
 
 func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     print("tapped on pin ")
+    
 }
 
 
 func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
     if control == view.rightCalloutAccessoryView {
-        if let doSomething = view.annotation?.title! {
-           print("do something")
+        if (view.annotation?.title!) != nil {
+            
+            print("do something")
         }
     }
   }
+    
+}
+
+extension UserDefaults{
+
+    func set(location: CLLocation, forKey key: String){
+        let locationLat = NSNumber(value:location.coordinate.latitude)
+        let locationLon = NSNumber(value: location.coordinate.longitude)
+        self.set(["lat": locationLat, "lon": locationLon], forKey: key)
+    }
+
+    func location(forKey key: String) -> CLLocation?
+    {
+        if let locationDictionary = self.object(forKey: key) as? Dictionary<String,NSNumber>{
+            let locationLat = locationDictionary["lat"]!.doubleValue
+            let locationLon = locationDictionary["Lon"]!.doubleValue
+            return CLLocation(latitude: locationLat, longitude: locationLon)
+        }
+        return nil
+
+    }
 }
