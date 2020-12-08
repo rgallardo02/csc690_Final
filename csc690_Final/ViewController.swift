@@ -10,16 +10,22 @@ import MapKit
 import CoreLocation
 
 class ViewController: UIViewController {
-
     @IBOutlet weak var mapView: MKMapView!
     
     @IBAction func returnLocation(_ sender: Any) {
-
        // let carLocation = defaults.String(forKey: "location")
         print("CarLocation:")
         
     }
   
+    @IBAction func changeView(_ sender: Any) {
+
+        if mapView.mapType == MKMapType.standard{
+            mapView.mapType = MKMapType.hybridFlyover
+        }else{
+            mapView.mapType = MKMapType.standard
+        }
+    }
     fileprivate let locationManager: CLLocationManager = {
       let manager = CLLocationManager()
         manager.requestWhenInUseAuthorization()
@@ -29,8 +35,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
          setUpMapView()
-        self.locationManager.requestAlwaysAuthorization()
-        
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+        mapView.showsUserLocation = true
+    
         mapView.delegate = self
         let longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTap))
         mapView.addGestureRecognizer(longTapGesture)
@@ -140,6 +150,12 @@ extension UserDefaults{
             return CLLocation(latitude: locationLat, longitude: locationLon)
         }
         return nil
-
     }
 }
+
+extension CLLocationCoordinate2D {
+var description: String {String(format: "%.8f, %.8f", self.latitude, self.longitude)
+        }
+    
+}
+
