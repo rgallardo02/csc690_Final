@@ -69,6 +69,11 @@ class MapViewController: UIViewController {
         mapView.showsScale = true
         currentLocation()
     }
+        
+    override open var shouldAutorotate: Bool {
+            return false
+        
+    }
     
     func currentLocation(){
         locationManager.delegate = self
