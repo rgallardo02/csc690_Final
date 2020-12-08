@@ -9,11 +9,11 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class ViewController: UIViewController {
+class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     @IBAction func returnLocation(_ sender: Any) {
-        print("CarLocation:")
+        self.mapView.showAnnotations(self.mapView.annotations, animated: true)
     }
     
     @IBAction func changeView(_ sender: Any) {
@@ -57,7 +57,7 @@ class ViewController: UIViewController {
     func addAnnotation(location: CLLocationCoordinate2D){
         let annotation = MKPointAnnotation()
         annotation.coordinate = location
-        annotation.title = "Save Address"
+        annotation.title = "Parked Car"
         self.mapView.removeAnnotations(mapView.annotations)
         self.mapView.addAnnotation(annotation)
         
@@ -73,7 +73,7 @@ class ViewController: UIViewController {
     func currentLocation(){
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        if #available(iOS 11.0, *){
+        if #available(iOS 14.0, *){
             locationManager.showsBackgroundLocationIndicator = true
         }else {
             
@@ -82,7 +82,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: CLLocationManagerDelegate {
+extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         let location = locations.last! as CLLocation
         let currentLocation = location.coordinate
@@ -97,7 +97,7 @@ extension ViewController: CLLocationManagerDelegate {
     
 }
 
-extension ViewController: MKMapViewDelegate
+extension MapViewController: MKMapViewDelegate
 {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard annotation is MKPointAnnotation else { print("no mkpointannotaions"); return nil }
@@ -132,28 +132,59 @@ extension ViewController: MKMapViewDelegate
     }
 }
 
-extension UserDefaults{
-    
-    func set(location: CLLocation, forKey key: String){
-        let locationLat = NSNumber(value:location.coordinate.latitude)
-        let locationLon = NSNumber(value: location.coordinate.longitude)
-        self.set(["lat": locationLat, "lon": locationLon], forKey: key)
-    }
-    
-    func location(forKey key: String) -> CLLocation?
-    {
-        if let locationDictionary = self.object(forKey: key) as? Dictionary<String,NSNumber>{
-            let locationLat = locationDictionary["lat"]!.doubleValue
-            let locationLon = locationDictionary["Lon"]!.doubleValue
-            return CLLocation(latitude: locationLat, longitude: locationLon)
-        }
-        return nil
-    }
-}
+//extension UserDefaults{
+//
+//    func set(location: CLLocation, forKey key: String){
+//        let locationLat = NSNumber(value:location.coordinate.latitude)
+//        let locationLon = NSNumber(value: location.coordinate.longitude)
+//        self.set(["lat": locationLat, "lon": locationLon], forKey: key)
+//    }
+//
+//    func location(forKey key: String) -> CLLocation?
+//    {
+//        if let locationDictionary = self.object(forKey: key) as? Dictionary<String,NSNumber>{
+//            let locationLat = locationDictionary["lat"]!.doubleValue
+//            let locationLon = locationDictionary["Lon"]!.doubleValue
+//            return CLLocation(latitude: locationLat, longitude: locationLon)
+//        }
+//        return nil
+//    }
+//}
+//
+//extension CLLocationCoordinate2D {
+//    var description: String {
+//        String(format: "%.8f, %.8f", self.latitude, self.longitude)
+//    }
+//}
 
-extension CLLocationCoordinate2D {
-    var description: String {
-        String(format: "%.8f, %.8f", self.latitude, self.longitude)
+extension MKMapView {
+    func fitAll() {
+        var zoomRect = MKMapRect.null;
+        for annotation in annotations {
+            let annotationPoint = MKMapPoint(annotation.coordinate)
+            let pointRect = MKMapRect(x: annotationPoint.x, y: annotationPoint.y, width: 0.01, height: 0.01);
+            zoomRect = zoomRect.union(pointRect);
+        }
+        setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100), animated: true)
     }
+
+    func fitAll(in annotations: [MKAnnotation], andShow show: Bool) {
+        var zoomRect:MKMapRect  = MKMapRect.null
+        for annotation in annotations {
+            let aPoint = MKMapPoint(annotation.coordinate)
+            let rect = MKMapRect(x: aPoint.x, y: aPoint.y, width: 0.3, height: 0.4)
+
+            if zoomRect.isNull {
+                zoomRect = rect
+            } else {
+                zoomRect = zoomRect.union(rect)
+            }
+        }
+        if(show) {
+            addAnnotations(annotations)
+        }
+        setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100), animated: true)
+    }
+
 }
 
