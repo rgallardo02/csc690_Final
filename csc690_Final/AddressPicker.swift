@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import WebKit
 
 struct LastAddress {
     let abbreviation: String
@@ -51,12 +50,6 @@ class AddressPickerViewController: UIViewController, UIPickerViewDataSource, UIP
         return addresses.count
     }
     
-    //DELETE?
-//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//        return addresses[row].abbreviation
-//    }
-    
-    //new
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         
         let view = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width - 100, height: 60))

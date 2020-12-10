@@ -45,11 +45,9 @@ class MapViewController: UIViewController {
     }
     
     @objc func longTap(sender: UIGestureRecognizer){
-        print("long tap")
         if sender.state == .began {
             let locationInView = sender.location(in: mapView)
             let locationOnMap = mapView.convert(locationInView, toCoordinateFrom: mapView)
-            
             addAnnotation(location: locationOnMap)
         }
     }
@@ -69,10 +67,9 @@ class MapViewController: UIViewController {
         mapView.showsScale = true
         currentLocation()
     }
-        
+    
     override open var shouldAutorotate: Bool {
-            return false
-        
+        return false
     }
     
     func currentLocation(){
@@ -80,8 +77,6 @@ class MapViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         if #available(iOS 14.0, *){
             locationManager.showsBackgroundLocationIndicator = true
-        }else {
-            
         }
         locationManager.startUpdatingLocation()
     }
@@ -99,7 +94,6 @@ extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
         print(error.localizedDescription)
     }
-    
 }
 
 extension MapViewController: MKMapViewDelegate
@@ -121,46 +115,7 @@ extension MapViewController: MKMapViewDelegate
         }
         return pinView
     }
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("tapped on pin ")
-        
-    }
-    
-    
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if control == view.rightCalloutAccessoryView {
-            if (view.annotation?.title!) != nil {
-                
-                print("do something")
-            }
-        }
-    }
 }
-
-//extension UserDefaults{
-//
-//    func set(location: CLLocation, forKey key: String){
-//        let locationLat = NSNumber(value:location.coordinate.latitude)
-//        let locationLon = NSNumber(value: location.coordinate.longitude)
-//        self.set(["lat": locationLat, "lon": locationLon], forKey: key)
-//    }
-//
-//    func location(forKey key: String) -> CLLocation?
-//    {
-//        if let locationDictionary = self.object(forKey: key) as? Dictionary<String,NSNumber>{
-//            let locationLat = locationDictionary["lat"]!.doubleValue
-//            let locationLon = locationDictionary["Lon"]!.doubleValue
-//            return CLLocation(latitude: locationLat, longitude: locationLon)
-//        }
-//        return nil
-//    }
-//}
-//
-//extension CLLocationCoordinate2D {
-//    var description: String {
-//        String(format: "%.8f, %.8f", self.latitude, self.longitude)
-//    }
-//}
 
 extension MKMapView {
     func fitAll() {
@@ -172,13 +127,13 @@ extension MKMapView {
         }
         setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100), animated: true)
     }
-
+    
     func fitAll(in annotations: [MKAnnotation], andShow show: Bool) {
         var zoomRect:MKMapRect  = MKMapRect.null
         for annotation in annotations {
             let aPoint = MKMapPoint(annotation.coordinate)
             let rect = MKMapRect(x: aPoint.x, y: aPoint.y, width: 0.3, height: 0.4)
-
+            
             if zoomRect.isNull {
                 zoomRect = rect
             } else {
@@ -190,6 +145,5 @@ extension MKMapView {
         }
         setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100), animated: true)
     }
-
 }
 
